@@ -5,7 +5,8 @@ import { generateUpdateEmailTemplate } from "@/lib/email";
 async function sendEmailWithResend(
   to: string,
   subject: string,
-  html: string
+  html: string,
+  text: string
 ) {
   const apiKey = process.env.RESEND_API_KEY;
   
@@ -22,10 +23,11 @@ async function sendEmailWithResend(
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        from: "ParcelFlow <noreply@parcelflow.com>",
+        from: process.env.RESEND_FROM_EMAIL || "ParcelFlow Support <support@parcelflow.jointaccount.org>",
         to,
         subject,
         html,
+        text,
       }),
     });
 
@@ -86,13 +88,14 @@ export async function POST(request: NextRequest) {
 
     // Generate email
     const trackingUrl = `${request.nextUrl.origin}/track?id=${parcel.tracking_id}`;
-    const { subject, html } = generateUpdateEmailTemplate(parcel, update, trackingUrl);
+    const { subject, html, text } = generateUpdateEmailTemplate(parcel, update, trackingUrl);
 
     // Send email
     const emailResult = await sendEmailWithResend(
       parcel.receiver_email,
       subject,
-      html
+      html,
+      text
     );
 
     if (!emailResult.success) {
