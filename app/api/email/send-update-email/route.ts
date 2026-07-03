@@ -24,6 +24,7 @@ async function sendEmailWithResend(
       },
       body: JSON.stringify({
         from: "ParcelFlow Support <support@parcelflow.jointaccount.org>",
+        reply_to: "support@parcelflow.jointaccount.org",
         to,
         subject,
         html,
