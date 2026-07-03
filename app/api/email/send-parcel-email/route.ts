@@ -23,7 +23,7 @@ async function sendEmailWithResend(
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        from: "ParcelFlow <noreply@parcelflow.com>",
+        from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
         to,
         subject,
         html,
