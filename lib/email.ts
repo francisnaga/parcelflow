@@ -74,10 +74,11 @@ export function generateParcelEmailTemplate(
           
           <div class="footer">
             <p>If you have any questions regarding your shipment, please contact our support team.</p>
-            <p style="margin-bottom: 0;">Support Email: <a href="mailto:support@parcelflow.com" style="color: #f97316; text-decoration: none;">support@parcelflow.com</a></p>
+            <p style="margin-bottom: 0;">Support Email: <a href="mailto:support@parcelflow.jointaccount.org" style="color: #f97316; text-decoration: none;">support@parcelflow.jointaccount.org</a></p>
             
             <div class="footer-links">
               &copy; ${new Date().getFullYear()} ParcelFlow Logistics. All rights reserved.<br>
+              123 Shipping Lane, Logistics City, CA 90210<br>
               This is an automated message, please do not reply directly to this email.
             </div>
           </div>
@@ -200,10 +201,11 @@ export function generateUpdateEmailTemplate(
           
           <div class="footer">
             <p>If you have any questions regarding your shipment, please contact our support team.</p>
-            <p style="margin-bottom: 0;">Support Email: <a href="mailto:support@parcelflow.com" style="color: #f97316; text-decoration: none;">support@parcelflow.com</a></p>
+            <p style="margin-bottom: 0;">Support Email: <a href="mailto:support@parcelflow.jointaccount.org" style="color: #f97316; text-decoration: none;">support@parcelflow.jointaccount.org</a></p>
             
             <div class="footer-links">
               &copy; ${new Date().getFullYear()} ParcelFlow Logistics. All rights reserved.<br>
+              123 Shipping Lane, Logistics City, CA 90210<br>
               This is an automated message, please do not reply directly to this email.
             </div>
           </div>
