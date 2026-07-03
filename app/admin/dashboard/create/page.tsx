@@ -30,13 +30,18 @@ export default function CreateParcelPage() {
     setLoading(true);
 
     try {
+      const payload = { ...formData };
+      if (payload.estimated_delivery_date) {
+        payload.estimated_delivery_date = new Date(payload.estimated_delivery_date).toISOString();
+      }
+
       const response = await fetch("/api/admin/parcels", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

@@ -41,15 +41,19 @@ export async function POST(request: NextRequest) {
 
     const tracking_id = generateTrackingId();
 
+    const insertData: any = {
+      ...validated,
+      tracking_id,
+      current_status: "pending",
+    };
+
+    if (insertData.estimated_delivery_date === "") {
+      insertData.estimated_delivery_date = null;
+    }
+
     const { data, error } = await supabaseAdmin
       .from("parcels")
-      .insert([
-        {
-          ...validated,
-          tracking_id,
-          current_status: "pending",
-        },
-      ])
+      .insert([insertData])
       .select()
       .single();
 
