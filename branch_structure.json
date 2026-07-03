@@ -1,0 +1,18 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "main",
+    "origin",
+    "parcelflow-web-app"
+  ],
+  "parent": {
+    "main": null,
+    "origin": "main",
+    "parcelflow-web-app": "main"
+  },
+  "order": [
+    "main",
+    "origin",
+    "parcelflow-web-app"
+  ]
+}
