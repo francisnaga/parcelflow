@@ -24,20 +24,28 @@ function TrackingContent() {
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
 
-  const handleSearch = async (e: React.FormEvent, searchValue?: string) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    const idToSearch = searchValue || trackingId;
-
-    if (!idToSearch.trim()) {
+    if (!trackingId.trim()) {
       setError("Please enter a tracking ID");
       return;
     }
+    await fetchTracking(trackingId);
+  };
 
+  useEffect(() => {
+    const initialId = searchParams?.get("id");
+    if (initialId && !parcel && !searched) {
+      fetchTracking(initialId);
+    }
+  }, []);
+
+  const fetchTracking = async (idToSearch: string) => {
+    if (!idToSearch.trim()) return;
     setLoading(true);
     setError(null);
     setParcel(null);
     setUpdates([]);
-
     try {
       const { data: parcelData, error: parcelError } = await supabaseClient
         .from("parcels")
@@ -48,34 +56,25 @@ function TrackingContent() {
       if (parcelError || !parcelData) {
         setError("Tracking ID not found. Please check and try again.");
         setSearched(true);
-        setLoading(false);
         return;
       }
 
-      const { data: updatesData, error: updatesError } = await supabaseClient
+      setParcel(parcelData);
+
+      const { data: updatesData } = await supabaseClient
         .from("tracking_updates")
         .select("*")
         .eq("parcel_id", parcelData.id)
         .order("created_at", { ascending: false });
 
-      setParcel(parcelData);
       setUpdates(updatesData || []);
       setSearched(true);
     } catch (err) {
       setError("Failed to fetch tracking information. Please try again.");
-      console.error("Tracking error:", err);
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (trackingId && !parcel && !searched) {
-      const form = new FormData();
-      const event = new FormEvent("submit", form);
-      handleSearch(event as any);
-    }
-  }, []);
 
   const copyToClipboard = () => {
     if (parcel?.tracking_id) {

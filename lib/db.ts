@@ -1,19 +1,39 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-  throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL");
+let _supabaseClient: SupabaseClient | null = null;
+let _supabaseAdmin: SupabaseClient | null = null;
+
+export function getSupabaseClient(): SupabaseClient {
+  if (!_supabaseClient) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!url || !key) throw new Error("Missing Supabase public env vars");
+    _supabaseClient = createClient(url, key);
+  }
+  return _supabaseClient;
 }
 
-if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-  throw new Error("Missing NEXT_PUBLIC_SUPABASE_ANON_KEY");
+export function getSupabaseAdmin(): SupabaseClient {
+  if (!_supabaseAdmin) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!url || !key) throw new Error("Missing Supabase admin env vars");
+    _supabaseAdmin = createClient(url, key);
+  }
+  return _supabaseAdmin;
 }
 
-export const supabaseClient = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+// Backward-compatible named exports used in client components
+export const supabaseClient = {
+  from: (table: string) => getSupabaseClient().from(table),
+  auth: {
+    signInWithPassword: (creds: { email: string; password: string }) =>
+      getSupabaseClient().auth.signInWithPassword(creds),
+  },
+};
 
-export const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+export const supabaseAdmin = {
+  from: (table: string) => getSupabaseAdmin().from(table),
+};
