@@ -3,7 +3,7 @@ import { Parcel, TrackingUpdate } from "./types";
 export function generateParcelEmailTemplate(
   parcel: Parcel,
   trackingUrl: string
-): { subject: string; html: string } {
+): { subject: string; html: string; text: string } {
   const subject = `Your ParcelFlow Shipment - Tracking ID: ${parcel.tracking_id}`;
 
   const html = `
