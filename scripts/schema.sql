@@ -74,4 +74,4 @@ CREATE POLICY IF NOT EXISTS "Public read tracking_updates"
 
 INSERT INTO admins (email, password_hash)
 VALUES ('admin@parcelflow.com', 'admin123')
-ON CONFLICT (email) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;      
