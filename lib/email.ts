@@ -69,6 +69,7 @@ export function generateParcelEmailTemplate(
             
             <div class="button-container">
               <a href="${trackingUrl}" class="button">Track Shipment</a>
+              <p style="margin-top: 15px; font-size: 13px; color: #6b7280; text-align: center;">Or copy this link:<br><a href="${trackingUrl}" style="color: #4b5563; word-break: break-all;">${trackingUrl}</a></p>
             </div>
           </div>
           
@@ -196,6 +197,7 @@ export function generateUpdateEmailTemplate(
             
             <div class="button-container">
               <a href="${trackingUrl}" class="button">View Full Tracking Details</a>
+              <p style="margin-top: 15px; font-size: 13px; color: #6b7280; text-align: center;">Or copy this link:<br><a href="${trackingUrl}" style="color: #4b5563; word-break: break-all;">${trackingUrl}</a></p>
             </div>
           </div>
           
