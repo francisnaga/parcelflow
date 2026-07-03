@@ -56,10 +56,10 @@ ALTER TABLE tracking_updates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admins ENABLE ROW LEVEL SECURITY;
 
 -- Public can read parcels and tracking_updates (for public tracking page)
-CREATE POLICY IF NOT EXISTS "Public read parcels"
+CREATE POLICY "Public read parcels"
   ON parcels FOR SELECT USING (true);
 
-CREATE POLICY IF NOT EXISTS "Public read tracking_updates"
+CREATE POLICY "Public read tracking_updates"
   ON tracking_updates FOR SELECT USING (true);
 
 -- Service role has full access (automatic via service role key)
