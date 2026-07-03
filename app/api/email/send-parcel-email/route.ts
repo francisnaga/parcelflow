@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/db";
+import { getSupabaseAdmin } from "@/lib/db";
 import { generateParcelEmailTemplate } from "@/lib/email";
 import { Parcel } from "@/lib/types";
 
@@ -8,14 +8,41 @@ async function sendEmailWithResend(
   subject: string,
   html: string
 ) {
-  // Since we don't have a Resend API key set up, we'll log the email
-  // In production, this would use: const { Resend } = require('resend');
-  console.log(`[EMAIL] Sending to: ${to}`);
-  console.log(`[EMAIL] Subject: ${subject}`);
-  console.log(`[EMAIL] HTML: ${html.substring(0, 100)}...`);
+  const apiKey = process.env.RESEND_API_KEY;
   
-  // For demo purposes, return success
-  return { success: true };
+  if (!apiKey) {
+    console.error("[EMAIL] RESEND_API_KEY not configured");
+    return { success: false, error: "Email service not configured" };
+  }
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        from: "ParcelFlow <noreply@parcelflow.com>",
+        to,
+        subject,
+        html,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("[EMAIL] Resend API error:", error);
+      return { success: false, error };
+    }
+
+    const result = await response.json();
+    console.log("[EMAIL] Successfully sent to:", to);
+    return { success: true, id: result.id };
+  } catch (error) {
+    console.error("[EMAIL] Fetch error:", error);
+    return { success: false, error: String(error) };
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -30,6 +57,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch parcel from database
+    const supabaseAdmin = getSupabaseAdmin();
     const { data: parcel, error: parcelError } = await supabaseAdmin
       .from("parcels")
       .select("*")
