@@ -55,23 +55,21 @@ export async function POST(request: NextRequest) {
 
     if (error) throw error;
 
-    // Send email notification to receiver
-    try {
-      await fetch(`${request.nextUrl.origin}/api/email/send-parcel-email`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          parcelId: data.id,
-        }),
-      });
-    } catch (emailError) {
-      console.error("Failed to send email:", emailError);
-      // Don't fail the request if email fails
-    }
+    // Send email notification to receiver (non-blocking)
+    // Fire and forget - don't wait for email response
+    fetch(`${request.nextUrl.origin}/api/email/send-parcel-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        parcelId: data.id,
+      }),
+    }).catch((err) => {
+      console.error("[PARCEL] Failed to send email notification:", err);
+    });
 
     return NextResponse.json({ parcel: data }, { status: 201 });
   } catch (error) {
-    console.error("Error creating parcel:", error);
+    console.error("[PARCEL] Error creating parcel:", error);
     return NextResponse.json(
       { error: "Failed to create parcel" },
       { status: 500 }
