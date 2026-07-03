@@ -59,17 +59,19 @@ export async function POST(request: NextRequest) {
 
     if (error) throw error;
 
-    // Send email notification to receiver (non-blocking)
-    // Fire and forget - don't wait for email response
-    fetch(`${request.nextUrl.origin}/api/email/send-parcel-email`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        parcelId: data.id,
-      }),
-    }).catch((err) => {
+    // Send email notification to receiver
+    // Await the fetch so Vercel doesn't freeze the process before it completes
+    try {
+      await fetch(`${request.nextUrl.origin}/api/email/send-parcel-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          parcelId: data.id,
+        }),
+      });
+    } catch (err) {
       console.error("[PARCEL] Failed to send email notification:", err);
-    });
+    }
 
     return NextResponse.json({ parcel: data }, { status: 201 });
   } catch (error) {
