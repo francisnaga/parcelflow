@@ -87,14 +87,30 @@ export function generateParcelEmailTemplate(
     </html>
   `;
 
-  return { subject, html };
+  const text = `
+Hello ${parcel.receiver_name},
+
+Your shipment has been successfully processed and is currently ${parcel.current_status}. 
+
+Tracking Number: ${parcel.tracking_id}
+Shipment Route: ${parcel.origin} to ${parcel.destination}
+${parcel.estimated_delivery_date ? `Estimated Delivery: ${new Date(parcel.estimated_delivery_date).toLocaleDateString()}` : ''}
+
+You can track your shipment here: ${trackingUrl}
+
+If you have any questions, please contact our support team at support@parcelflow.jointaccount.org.
+
+ParcelFlow Logistics
+  `.trim();
+
+  return { subject, html, text };
 }
 
 export function generateUpdateEmailTemplate(
   parcel: Parcel,
   update: TrackingUpdate,
   trackingUrl: string
-): { subject: string; html: string } {
+): { subject: string; html: string; text: string } {
   const subject = `Shipment Update: ${parcel.tracking_id} - ${update.status.toUpperCase()}`;
 
   const html = `
@@ -197,5 +213,22 @@ export function generateUpdateEmailTemplate(
     </html>
   `;
 
-  return { subject, html };
+  const text = `
+Hello ${parcel.receiver_name},
+
+There is a new status update regarding your shipment: ${update.status.toUpperCase()}
+
+Tracking Number: ${parcel.tracking_id}
+${update.location ? `Location: ${update.location}` : ''}
+${update.description ? `Update Details: ${update.description}` : ''}
+Time of Update: ${new Date(update.created_at).toLocaleString('en-US', { timeZoneName: 'short' })}
+
+You can view full tracking details here: ${trackingUrl}
+
+If you have any questions, please contact our support team at support@parcelflow.jointaccount.org.
+
+ParcelFlow Logistics
+  `.trim();
+
+  return { subject, html, text };
 }
