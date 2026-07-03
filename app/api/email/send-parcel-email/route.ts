@@ -37,7 +37,7 @@ async function sendEmailWithResend(
     }
 
     const result = await response.json();
-    console.log("[EMAIL] Successfully sent to:", to);
+    console.log("[EMAIL] Successfully sent to:", to, "Email ID:", result.id);
     return { success: true, id: result.id };
   } catch (error) {
     console.error("[EMAIL] Fetch error:", error);
@@ -50,11 +50,14 @@ export async function POST(request: NextRequest) {
     const { parcelId } = await request.json();
 
     if (!parcelId) {
+      console.error("[EMAIL] Missing parcelId in request");
       return NextResponse.json(
         { error: "Missing parcelId" },
         { status: 400 }
       );
     }
+
+    console.log("[EMAIL] Processing email for parcel:", parcelId);
 
     // Fetch parcel from database
     const supabaseAdmin = getSupabaseAdmin();
@@ -65,11 +68,14 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (parcelError || !parcel) {
+      console.error("[EMAIL] Parcel not found:", parcelId, parcelError);
       return NextResponse.json(
         { error: "Parcel not found" },
         { status: 404 }
       );
     }
+
+    console.log("[EMAIL] Parcel found. Sending to:", parcel.receiver_email);
 
     // Generate email
     const trackingUrl = `${request.nextUrl.origin}/track?id=${parcel.tracking_id}`;
@@ -83,15 +89,16 @@ export async function POST(request: NextRequest) {
     );
 
     if (!emailResult.success) {
+      console.error("[EMAIL] Failed to send email to", parcel.receiver_email, emailResult.error);
       return NextResponse.json(
         { error: "Failed to send email" },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ success: true, message: "Email sent" });
+    return NextResponse.json({ success: true, message: "Email sent", emailId: emailResult.id });
   } catch (error) {
-    console.error("Email error:", error);
+    console.error("[EMAIL] Unexpected error:", error);
     return NextResponse.json(
       { error: "Failed to send email" },
       { status: 500 }
