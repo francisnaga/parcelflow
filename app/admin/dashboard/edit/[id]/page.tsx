@@ -25,6 +25,7 @@ export default function EditParcelPage() {
     location: "",
     description: "",
     feeAmount: "",
+    currencySymbol: "$",
   });
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export default function EditParcelPage() {
           status: updateData.status,
           location: updateData.location,
           description: updateData.status === "payment required" && updateData.feeAmount
-            ? `Fee Amount: ${updateData.feeAmount} | ${updateData.description}`
+            ? `Fee Amount: ${updateData.currencySymbol}${updateData.feeAmount} | ${updateData.description}`
             : updateData.description,
         }),
       });
@@ -88,7 +89,7 @@ export default function EditParcelPage() {
         const pData = await pRes.json();
         setParcel(pData.parcel);
       }
-      setUpdateData({ status: "in transit", location: "", description: "", feeAmount: "" });
+      setUpdateData({ status: "in transit", location: "", description: "", feeAmount: "", currencySymbol: "$" });
     } catch (err: any) {
       setError(err.message || "An error occurred");
     } finally {
@@ -177,14 +178,29 @@ export default function EditParcelPage() {
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Fee Amount *
                 </label>
-                <Input
-                  type="text"
-                  placeholder="e.g. $150.00"
-                  value={updateData.feeAmount}
-                  onChange={(e) => setUpdateData({ ...updateData, feeAmount: e.target.value })}
-                  className="w-full"
-                  required={updateData.status === "payment required"}
-                />
+                <div className="flex gap-2">
+                  <select
+                    value={updateData.currencySymbol}
+                    onChange={(e) => setUpdateData({ ...updateData, currencySymbol: e.target.value })}
+                    className="flex h-10 w-24 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  >
+                    <option value="$">USD ($)</option>
+                    <option value="€">EUR (€)</option>
+                    <option value="£">GBP (£)</option>
+                    <option value="₦">NGN (₦)</option>
+                    <option value="R">ZAR (R)</option>
+                    <option value="A$">AUD (A$)</option>
+                    <option value="C$">CAD (C$)</option>
+                  </select>
+                  <Input
+                    type="text"
+                    placeholder="e.g. 150.00"
+                    value={updateData.feeAmount}
+                    onChange={(e) => setUpdateData({ ...updateData, feeAmount: e.target.value })}
+                    className="flex-1"
+                    required={updateData.status === "payment required"}
+                  />
+                </div>
                 <p className="text-xs text-muted-foreground mt-1">This amount will be shown to the user in the billing email.</p>
               </motion.div>
             )}
