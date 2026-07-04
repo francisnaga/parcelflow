@@ -159,11 +159,11 @@ function TrackingContent() {
               className="space-y-8"
             >
               {/* Parcel Summary */}
-              <div className="p-8 rounded-lg border border-border bg-card">
-                <div className="flex items-start justify-between mb-6">
+              <div className="p-5 sm:p-8 rounded-lg border border-border bg-card">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <h2 className="text-3xl font-bold text-foreground">
+                      <h2 className="text-2xl sm:text-3xl font-bold text-foreground break-all">
                         {parcel.tracking_id}
                       </h2>
                       <button
@@ -179,7 +179,7 @@ function TrackingContent() {
                     </p>
                   </div>
                   <div
-                    className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(
+                    className={`inline-block self-start px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(
                       parcel.current_status
                     )}`}
                   >
@@ -237,8 +237,8 @@ function TrackingContent() {
 
               {/* Timeline */}
               {updates.length > 0 && (
-                <div className="p-8 rounded-lg border border-border bg-card">
-                  <h3 className="text-2xl font-bold text-foreground mb-8">
+                <div className="p-5 sm:p-8 rounded-lg border border-border bg-card overflow-hidden">
+                  <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-8">
                     Tracking Timeline
                   </h3>
                   <div className="space-y-0">
@@ -248,7 +248,7 @@ function TrackingContent() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.1 }}
-                        className="flex gap-6 relative"
+                        className="flex gap-4 sm:gap-6 relative"
                       >
                         <div className="flex flex-col items-center">
                           <div
@@ -264,8 +264,8 @@ function TrackingContent() {
                             <div className="w-0.5 h-16 bg-border my-2" />
                           )}
                         </div>
-                        <div className="pb-8 pt-1">
-                          <p className="text-lg font-semibold text-foreground">
+                        <div className="pb-8 pt-1 flex-1 min-w-0">
+                          <p className="text-base sm:text-lg font-semibold text-foreground break-words">
                             {update.status}
                           </p>
                           {update.location && (

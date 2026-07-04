@@ -28,15 +28,9 @@ export function Navbar() {
           <div className="flex items-center gap-4">
             <Link
               href="/track"
-              className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
-            >
-              Track Parcel
-            </Link>
-            <Link
-              href="/admin"
               className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
             >
-              Admin
+              Track Parcel
             </Link>
           </div>
         </div>
