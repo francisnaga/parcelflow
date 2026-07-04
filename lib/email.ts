@@ -10,19 +10,19 @@ const baseStyles = `
   .wrapper { padding: 40px 20px; background-color: #f4f5f7; }
   .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; text-align: left; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
   .header { background-color: #ffffff; padding: 32px 40px; border-bottom: 3px solid ${PRIMARY_COLOR}; text-align: center; }
-  .header-logo { font-size: 28px; font-weight: 800; color: #111827; letter-spacing: -0.5px; margin: 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .header-logo { font-size: 28px; font-weight: 800; color: #111827; letter-spacing: -0.5px; margin: 0; text-align: center; }
   .header-logo span { color: ${PRIMARY_COLOR}; }
   .content { padding: 40px; }
   .greeting { font-size: 20px; font-weight: 700; margin-bottom: 16px; color: #111827; }
   .intro-text { color: #4b5563; font-size: 15px; margin-bottom: 32px; }
   .details-box { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 28px; margin-bottom: 32px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
-  .detail-row { margin-bottom: 20px; display: flex; flex-direction: column; }
+  .detail-row { margin-bottom: 20px; display: block; }
   .detail-row:last-child { margin-bottom: 0; }
-  .detail-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 6px; font-weight: 700; }
-  .detail-value { font-size: 16px; color: #0f172a; font-weight: 600; }
-  .tracking-id { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background-color: #f1f5f9; padding: 6px 12px; border-radius: 6px; letter-spacing: 1px; color: ${PRIMARY_COLOR}; font-weight: 700; border: 1px solid #e2e8f0; display: inline-block; }
+  .detail-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 8px; font-weight: 700; display: block; }
+  .detail-value { font-size: 16px; color: #0f172a; font-weight: 600; display: block; word-break: break-word; }
+  .tracking-id { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background-color: #f1f5f9; padding: 6px 12px; border-radius: 6px; letter-spacing: 1px; color: ${PRIMARY_COLOR}; font-weight: 700; border: 1px solid #e2e8f0; display: inline-block; margin-top: 4px; }
   .button-container { text-align: center; margin-top: 20px; }
-  .button { display: inline-block; background-color: ${PRIMARY_COLOR}; color: #ffffff; padding: 16px 36px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px rgba(255, 107, 53, 0.25); transition: transform 0.2s; }
+  .button { display: inline-block; background-color: ${PRIMARY_COLOR}; color: #ffffff; padding: 16px 36px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px rgba(255, 107, 53, 0.25); }
   .footer { background-color: #f8fafc; padding: 32px 40px; text-align: center; border-top: 1px solid #e2e8f0; }
   .footer p { margin: 0 0 12px 0; color: #64748b; font-size: 14px; }
   .footer-links { margin-top: 24px; font-size: 12px; color: #94a3b8; line-height: 1.8; }
@@ -64,9 +64,9 @@ export function generateParcelEmailTemplate(
               
               <div class="detail-row" style="margin-top: 24px;">
                 <div class="detail-label">Route</div>
-                <div class="detail-value" style="display: flex; align-items: center; gap: 10px;">
+                <div class="detail-value">
                   ${parcel.origin} 
-                  <span style="color: ${PRIMARY_COLOR}; font-size: 20px;">&rarr;</span> 
+                  <span style="color: ${PRIMARY_COLOR}; font-size: 18px; margin: 0 8px; display: inline-block;">&rarr;</span> 
                   ${parcel.destination}
                 </div>
               </div>
