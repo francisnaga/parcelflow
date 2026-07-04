@@ -43,6 +43,8 @@ export function getStatusColor(status: string): string {
       return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
     case "on hold":
       return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200";
+    case "payment required":
+      return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
     default:
       return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
   }
@@ -60,6 +62,8 @@ export function getStatusIcon(status: string): string {
       return "❌";
     case "on hold":
       return "⚠️";
+    case "payment required":
+      return "💳";
     default:
       return "📍";
   }

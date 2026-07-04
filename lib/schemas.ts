@@ -16,7 +16,7 @@ export const createParcelSchema = z.object({
 
 export const trackingUpdateSchema = z.object({
   parcel_id: z.string().uuid("Invalid parcel ID"),
-  status: z.enum(["pending", "in transit", "delivered", "failed", "on hold"]),
+  status: z.enum(["pending", "in transit", "delivered", "failed", "on hold", "payment required"]),
   location: z.string().optional().or(z.literal("")),
   description: z.string().optional().or(z.literal("")),
 });
