@@ -206,33 +206,26 @@ export function generateUpdateEmailTemplate(
             </div>
             
             ${update.status === 'payment required' ? `
-            <div style="background-color: #fff1f2; border-left: 5px solid #e11d48; padding: 32px; margin-top: 32px; border-radius: 0 12px 12px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-              <h3 style="margin-top: 0; color: #be123c; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">
+            <div style="background-color: #fff1f2; border-left: 5px solid #e11d48; padding: 28px; margin-top: 32px; border-radius: 0 8px 8px 0;">
+              <h3 style="margin-top: 0; color: #be123c; font-size: 20px; font-weight: 800; margin-bottom: 24px;">
                 Action Required: Payment Needed
               </h3>
-              <p style="color: #881337; margin-bottom: 24px; font-size: 15px; line-height: 1.6;">
-                To proceed with your delivery and avoid delays, a clearance fee is required. Please settle this payment immediately using one of our supported methods below.
-                ${feeAmountDisplay ? `<br><br><strong style="font-size: 18px; color: #be123c; background-color: #ffe4e6; padding: 8px 12px; border-radius: 6px; display: inline-block;">Amount Due: ${feeAmountDisplay}</strong>` : ''}
-              </p>
               
-              <div style="background-color: #ffffff; padding: 24px; border-radius: 10px; margin-bottom: 24px; border: 1px solid #fecdd3; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                <h4 style="margin: 0 0 16px 0; color: #be123c; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Supported Payment Methods</h4>
-                <div style="margin-bottom: 12px; color: #4c0519; font-size: 15px;">
-                  <strong style="color: #9f1239;">1. Gift Cards</strong><br>
-                  <span style="color: #881337;">Apple, Steam, or Amazon Gift Cards are accepted. Purchase the card for the required amount and send the details to our WhatsApp agent.</span>
-                </div>
-                <div style="color: #4c0519; font-size: 15px;">
-                  <strong style="color: #9f1239;">2. PayPal / Crypto</strong><br>
-                  <span style="color: #881337;">Fast and secure transfers. Ask our WhatsApp agent for the current billing address.</span>
-                </div>
+              ${feeAmountDisplay ? `
+              <div style="margin-bottom: 24px;">
+                <span style="font-size: 12px; color: #881337; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: block; margin-bottom: 4px;">Amount Due</span>
+                <span style="font-size: 24px; color: #be123c; font-weight: 800;">${feeAmountDisplay}</span>
+              </div>
+              ` : ''}
+              
+              <div style="margin-bottom: 28px;">
+                <span style="font-size: 12px; color: #881337; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">Supported Payment Methods</span>
+                <span style="font-size: 16px; color: #be123c; font-weight: 600;">Gift Cards &bull; PayPal &bull; Crypto</span>
               </div>
               
-              <a href="${WHATSAPP_LINK}" style="display: block; width: 100%; text-align: center; background-color: #25D366; color: #ffffff; padding: 18px 0; border-radius: 10px; text-decoration: none; font-weight: 800; font-size: 16px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);">
+              <a href="${WHATSAPP_LINK}" style="display: block; width: 100%; text-align: center; background-color: #25D366; color: #ffffff; padding: 16px 0; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px;">
                 Message us on WhatsApp to Pay
               </a>
-              <p style="text-align: center; margin-top: 16px; font-size: 14px; color: #9f1239;">
-                WhatsApp Number: <strong>${WHATSAPP_NUMBER}</strong>
-              </p>
             </div>
             ` : ''}
 
@@ -271,7 +264,7 @@ Timestamp: ${new Date(update.created_at).toLocaleString('en-US', { timeZoneName:
 `.trim();
 
   if (update.status === 'payment required') {
-    text += `\n\n*** ACTION REQUIRED: PAYMENT NEEDED ***\nTo proceed with your delivery and avoid delays, a clearance fee is required.\n${feeAmountDisplay ? `\nAMOUNT DUE: ${feeAmountDisplay}\n` : ''}\nSUPPORTED PAYMENT METHODS:\n1. Gift Cards: Apple, Steam, or Amazon Gift Cards are accepted.\n2. PayPal / Crypto: Secure and fast transfers.\n\nTO PAY, CONTACT US ON WHATSAPP: ${WHATSAPP_NUMBER}\nOr click this link to message us: ${WHATSAPP_LINK}\n`;
+    text += `\n\n*** ACTION REQUIRED: PAYMENT NEEDED ***\n${feeAmountDisplay ? `\nAMOUNT DUE: ${feeAmountDisplay}\n` : ''}\nSUPPORTED PAYMENT METHODS: Gift Cards, PayPal, Crypto.\n\nTO PAY, MESSAGE US ON WHATSAPP: ${WHATSAPP_LINK}\n`;
   } else {
     text += `\n\nYou can view full tracking details here: ${trackingUrl}`;
   }
