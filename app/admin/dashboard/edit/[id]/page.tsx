@@ -24,6 +24,7 @@ export default function EditParcelPage() {
     status: "in transit",
     location: "",
     description: "",
+    feeAmount: "",
   });
 
   useEffect(() => {
@@ -65,7 +66,11 @@ export default function EditParcelPage() {
         },
         body: JSON.stringify({
           parcel_id: id,
-          ...updateData,
+          status: updateData.status,
+          location: updateData.location,
+          description: updateData.status === "payment required" && updateData.feeAmount
+            ? `Fee Amount: ${updateData.feeAmount} | ${updateData.description}`
+            : updateData.description,
         }),
       });
 
@@ -83,7 +88,7 @@ export default function EditParcelPage() {
         const pData = await pRes.json();
         setParcel(pData.parcel);
       }
-      setUpdateData({ status: "in transit", location: "", description: "" });
+      setUpdateData({ status: "in transit", location: "", description: "", feeAmount: "" });
     } catch (err: any) {
       setError(err.message || "An error occurred");
     } finally {
@@ -156,12 +161,34 @@ export default function EditParcelPage() {
                 required
               >
                 <option value="pending">Pending</option>
+                <option value="payment required">Payment Required</option>
                 <option value="in transit">In Transit</option>
                 <option value="delivered">Delivered</option>
                 <option value="failed">Failed</option>
                 <option value="on hold">On Hold</option>
               </select>
             </div>
+            
+            {updateData.status === "payment required" && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+              >
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Fee Amount *
+                </label>
+                <Input
+                  type="text"
+                  placeholder="e.g. $150.00"
+                  value={updateData.feeAmount}
+                  onChange={(e) => setUpdateData({ ...updateData, feeAmount: e.target.value })}
+                  className="w-full"
+                  required={updateData.status === "payment required"}
+                />
+                <p className="text-xs text-muted-foreground mt-1">This amount will be shown to the user in the billing email.</p>
+              </motion.div>
+            )}
+            
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
                 Current Location (optional)

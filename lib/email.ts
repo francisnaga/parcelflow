@@ -199,6 +199,23 @@ export function generateUpdateEmailTemplate(
               <a href="${trackingUrl}" class="button">View Full Tracking Details</a>
               <p style="margin-top: 15px; font-size: 13px; color: #6b7280; text-align: center;">Or copy this link:<br><a href="${trackingUrl}" style="color: #4b5563; word-break: break-all;">${trackingUrl}</a></p>
             </div>
+            
+            ${update.status === 'payment required' ? `
+            <div style="background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 24px; margin-top: 30px; text-align: left;">
+              <h3 style="margin-top: 0; color: #991b1b; font-size: 18px;">Action Required: Payment Needed</h3>
+              <p style="color: #7f1d1d; margin-bottom: 16px;">To proceed with your delivery, please settle the required fees (e.g. Customs, Shipping Insurance). We accept the following payment methods:</p>
+              
+              <div style="background-color: #ffffff; padding: 16px; border-radius: 6px; margin-bottom: 12px; border: 1px solid #fee2e2;">
+                <h4 style="margin: 0 0 8px 0; color: #991b1b;">1. Gift Cards</h4>
+                <p style="margin: 0; color: #4b5563; font-size: 14px;">Purchase an <strong>Apple, Steam, or Amazon Gift Card</strong> for the amount due. Reply directly to this email with the clear pictures of the card (front and back showing the code) or the digital code.</p>
+              </div>
+              
+              <div style="background-color: #ffffff; padding: 16px; border-radius: 6px; border: 1px solid #fee2e2;">
+                <h4 style="margin: 0 0 8px 0; color: #991b1b;">2. PayPal</h4>
+                <p style="margin: 0; color: #4b5563; font-size: 14px;">Reply to this email to request our official PayPal address to send the payment to.</p>
+              </div>
+            </div>
+            ` : ''}
           </div>
           
           <div class="footer">
@@ -217,7 +234,7 @@ export function generateUpdateEmailTemplate(
     </html>
   `;
 
-  const text = `
+  let text = `
 Hello ${parcel.receiver_name},
 
 There is a new status update regarding your shipment: ${update.status.toUpperCase()}
@@ -226,13 +243,13 @@ Tracking Number: ${parcel.tracking_id}
 ${update.location ? `Location: ${update.location}` : ''}
 ${update.description ? `Update Details: ${update.description}` : ''}
 Time of Update: ${new Date(update.created_at).toLocaleString('en-US', { timeZoneName: 'short' })}
+`.trim();
 
-You can view full tracking details here: ${trackingUrl}
+  if (update.status === 'payment required') {
+    text += `\n\n*** ACTION REQUIRED: PAYMENT NEEDED ***\nTo proceed with your delivery, please settle the required fees. We accept the following payment methods:\n\n1. Gift Cards: Purchase an Apple, Steam, or Amazon Gift Card for the amount due. Reply directly to this email with the clear pictures of the card (front and back) or the digital code.\n2. PayPal: Reply to this email to request our official PayPal address to send the payment to.\n`;
+  }
 
-If you have any questions, please contact our support team at support@parcelflow.jointaccount.org.
-
-ParcelFlow Logistics
-  `.trim();
+  text += `\n\nYou can view full tracking details here: ${trackingUrl}\n\nIf you have any questions, please contact our support team at support@parcelflow.jointaccount.org.\n\nParcelFlow Logistics`;
 
   return { subject, html, text };
 }
