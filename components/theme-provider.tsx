@@ -8,10 +8,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
-    // Check system preference
-    const darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    // Force light mode default for professional logistics look
     const savedTheme = localStorage.getItem("theme");
-    const shouldBeDark = savedTheme === "dark" || darkMode;
+    const shouldBeDark = savedTheme === "dark";
     setIsDark(shouldBeDark);
     updateTheme(shouldBeDark);
   }, []);
