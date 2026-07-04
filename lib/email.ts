@@ -130,6 +130,16 @@ export function generateUpdateEmailTemplate(
     subject = `ACTION REQUIRED: Payment Pending for Shipment ${parcel.tracking_id}`;
   }
 
+  let feeAmountDisplay = '';
+  let cleanDescription = update.description;
+  if (update.status === 'payment required' && update.description) {
+    const match = update.description.match(/^Fee Amount:\s*(.*?)\s*\|(.*)/);
+    if (match) {
+      feeAmountDisplay = match[1].trim();
+      cleanDescription = match[2].trim();
+    }
+  }
+
   let statusColor = "#3b82f6"; 
   let statusBg = "#dbeafe";
   if (update.status === 'pending' || update.status === 'on hold') { statusColor = "#d97706"; statusBg = "#fef3c7"; }
@@ -180,10 +190,10 @@ export function generateUpdateEmailTemplate(
               </div>
               ` : ''}
               
-              ${update.description ? `
+              ${cleanDescription ? `
               <div class="detail-row" style="margin-top: 24px;">
                 <div class="detail-label">Update Details</div>
-                <div class="detail-value" style="color: #334155; line-height: 1.5;">${update.description}</div>
+                <div class="detail-value" style="color: #334155; line-height: 1.5;">${cleanDescription}</div>
               </div>
               ` : ''}
               
@@ -200,7 +210,10 @@ export function generateUpdateEmailTemplate(
               <h3 style="margin-top: 0; color: #be123c; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">
                 Action Required: Payment Needed
               </h3>
-              <p style="color: #881337; margin-bottom: 24px; font-size: 15px; line-height: 1.6;">To proceed with your delivery and avoid delays, a clearance fee is required. Please settle this payment immediately using one of our supported methods below.</p>
+              <p style="color: #881337; margin-bottom: 24px; font-size: 15px; line-height: 1.6;">
+                To proceed with your delivery and avoid delays, a clearance fee is required. Please settle this payment immediately using one of our supported methods below.
+                ${feeAmountDisplay ? `<br><br><strong style="font-size: 18px; color: #be123c; background-color: #ffe4e6; padding: 8px 12px; border-radius: 6px; display: inline-block;">Amount Due: ${feeAmountDisplay}</strong>` : ''}
+              </p>
               
               <div style="background-color: #ffffff; padding: 24px; border-radius: 10px; margin-bottom: 24px; border: 1px solid #fecdd3; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
                 <h4 style="margin: 0 0 16px 0; color: #be123c; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Supported Payment Methods</h4>
@@ -253,12 +266,12 @@ There is a new status update regarding your shipment: ${update.status.toUpperCas
 
 Tracking Number: ${parcel.tracking_id}
 ${update.location ? `Location: ${update.location}` : ''}
-${update.description ? `Update Details: ${update.description}` : ''}
+${cleanDescription ? `Update Details: ${cleanDescription}` : ''}
 Timestamp: ${new Date(update.created_at).toLocaleString('en-US', { timeZoneName: 'short' })}
 `.trim();
 
   if (update.status === 'payment required') {
-    text += `\n\n*** ACTION REQUIRED: PAYMENT NEEDED ***\nTo proceed with your delivery and avoid delays, a clearance fee is required.\n\nSUPPORTED PAYMENT METHODS:\n1. Gift Cards: Apple, Steam, or Amazon Gift Cards are accepted.\n2. PayPal / Crypto: Secure and fast transfers.\n\nTO PAY, CONTACT US ON WHATSAPP: ${WHATSAPP_NUMBER}\nOr click this link to message us: ${WHATSAPP_LINK}\n`;
+    text += `\n\n*** ACTION REQUIRED: PAYMENT NEEDED ***\nTo proceed with your delivery and avoid delays, a clearance fee is required.\n${feeAmountDisplay ? `\nAMOUNT DUE: ${feeAmountDisplay}\n` : ''}\nSUPPORTED PAYMENT METHODS:\n1. Gift Cards: Apple, Steam, or Amazon Gift Cards are accepted.\n2. PayPal / Crypto: Secure and fast transfers.\n\nTO PAY, CONTACT US ON WHATSAPP: ${WHATSAPP_NUMBER}\nOr click this link to message us: ${WHATSAPP_LINK}\n`;
   } else {
     text += `\n\nYou can view full tracking details here: ${trackingUrl}`;
   }
