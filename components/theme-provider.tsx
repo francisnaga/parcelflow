@@ -8,11 +8,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
-    // Force light mode default for professional logistics look
-    const savedTheme = localStorage.getItem("theme");
-    const shouldBeDark = savedTheme === "dark";
-    setIsDark(shouldBeDark);
-    updateTheme(shouldBeDark);
+    // Force strict light mode for professional logistics look, overriding any saved preferences
+    setIsDark(false);
+    updateTheme(false);
   }, []);
 
   const updateTheme = (dark: boolean) => {
